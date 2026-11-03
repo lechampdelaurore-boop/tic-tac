@@ -83,7 +83,7 @@ Au deuxième essai raté, l'appli montre la bonne réponse en l'expliquant, et l
 
 ## Carnet du parent
 
-Lien discret en bas de l'accueil : étoiles par niveau, jours joués sur les 14 derniers jours, erreurs les plus fréquentes sur 7 jours, « Tout débloquer », « Remettre à zéro » et « Copier le résumé ». Détails dans le [guide des parents](docs/guide-parents.md).
+Lien discret en bas de l'accueil : étoiles par niveau, jours joués sur les 14 derniers jours, erreurs les plus fréquentes sur 7 jours, « Remettre à zéro » et « Copier le résumé ». Détails dans le [guide des parents](docs/guide-parents.md).
 
 ## Réglages ⚙
 
