@@ -21,9 +21,7 @@ Le bouton 🏠 en haut à gauche ramène à « Mes applis ».
 
 ## Dans quel ordre
 
-Les trois mondes sont ouverts dès le début, pour suivre l'ordre de la classe : on peut faire les conversions avant ou après les durées. Dans chaque monde, les niveaux s'ouvrent l'un après l'autre (8 bonnes réponses sur 10 du premier coup pour réussir un niveau).
-
-Si l'enfant connaît déjà une partie, le carnet du parent peut **tout débloquer**.
+Les trois mondes sont ouverts dès le début, pour suivre l'ordre de la classe : on peut faire les conversions avant ou après les durées. Tous les niveaux sont ouverts : l'enfant peut commencer par celui qu'il veut, par exemple s'il connaît déjà une partie. L'ordre conseillé reste affiché : le premier niveau sans étoile est entouré et marqué « 👉 Conseillé » (8 bonnes réponses sur 10 du premier coup pour gagner une étoile).
 
 Conseil : dans le monde « Lire l'heure », ne pas sauter le niveau 2 (« la petite aiguille seule »). C'est l'aiguille la plus difficile, et l'erreur la plus fréquente vient de là : à 8h45, la petite aiguille est presque sur le 9, et on lit « 9h45 ».
 
@@ -35,7 +33,7 @@ Lien discret « Carnet du parent » en bas de l'accueil (sans mot de passe).
 - **Jours joués** sur les 14 derniers jours.
 - **Erreurs les plus fréquentes** des 7 derniers jours, par type (par exemple « petite aiguille lue trop tôt : 6 fois cette semaine »). C'est la partie la plus utile : elle dit quoi revoir avec l'enfant.
 - **Copier le résumé** : un texte à coller dans un message (pour l'autre parent, la maîtresse ou le maître).
-- **Tout débloquer** et **Remettre à zéro** (avec confirmation).
+- **Remettre à zéro** (avec confirmation).
 
 ### Que faire selon l'erreur
 

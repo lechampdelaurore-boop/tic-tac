@@ -343,7 +343,8 @@ p { margin: 0; }
   background: var(--surface); border: var(--bord) solid var(--line); border-radius: var(--r-btn); box-shadow: var(--ombre);
 }
 .niveau:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--line); }
-.niveau:disabled { cursor: default; opacity: .6; transform: none; box-shadow: var(--ombre); }
+.niveau.conseil { border-color: var(--sun); box-shadow: 0 0 0 3px var(--sun), var(--ombre); }
+.niveau .conseille { display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: 999px; background: var(--sun); color: var(--on-sun); font-weight: 800; font-size: .8rem; }
 .niveau .lettre { width: 40px; height: 40px; display: grid; place-items: center; border: 2px solid var(--line); border-radius: 12px; font: 700 1.2rem var(--display); }
 .niveau:nth-child(6n+1) .lettre { background: var(--p-rose); }
 .niveau:nth-child(6n+2) .lettre { background: var(--p-soleil); }
@@ -581,7 +582,6 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
       <button class="btn btn-action" type="button" id="btnCopier">Copier le résumé</button>
       <p class="muted" id="copieInfo" hidden></p>
       <div class="zone-danger">
-        <button class="btn" type="button" id="btnDebloquer">🔓 Tout débloquer</button>
         <button class="btn" type="button" id="btnZero">Remettre à zéro</button>
         <button class="btn btn-soleil" type="button" id="btnZeroOui" hidden>Oui, tout effacer</button>
       </div>
@@ -2253,7 +2253,8 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
     window.scrollTo(0, 0);
   }
   function etoilesTxt(n) { return '<span class="etoile-on">' + '★'.repeat(n) + '</span><span class="etoile-off">' + '★'.repeat(3 - n) + '</span>'; }
-  function ouvert(mid, i) { return i === 0 || prog.tout || prog[mid][i - 1] >= 1; }
+  // Tous les niveaux sont ouverts. On met en avant le premier niveau sans étoile : l’ordre conseillé.
+  function conseille(mid) { return prog[mid].indexOf(0); }
 
   function profil() { var p = store.get('marc.profil', null); return p && typeof p.prenom === 'string' ? p.prenom.trim().slice(0, 30) : ''; }
   function afficherAccueil() {
@@ -2275,10 +2276,11 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
     mondeOuvert = mid;
     var m = MONDES.filter(function (x) { return x.id === mid; })[0];
     $('#titreMonde').textContent = m.ico + ' ' + m.nom;
+    var conseil = conseille(mid);
     $('#niveaux').innerHTML = m.niveaux.map(function (n, i) {
-      var ok = ouvert(mid, i);
-      return '<button type="button" class="niveau" data-niv="' + mid + '-' + (i + 1) + '"' + (ok ? '' : ' disabled') + '><span class="lettre">' + LETTRES[i] + '</span>' +
-        '<span><b>' + esc(n.nom) + '</b><small>' + esc(n.desc) + '</small></span><span class="et3">' + (ok ? etoilesTxt(prog[mid][i]) : '🔒') + '</span></button>';
+      var c = i === conseil;
+      return '<button type="button" class="niveau' + (c ? ' conseil' : '') + '" data-niv="' + mid + '-' + (i + 1) + '"><span class="lettre">' + LETTRES[i] + '</span>' +
+        '<span><b>' + esc(n.nom) + '</b><small>' + esc(n.desc) + '</small>' + (c ? '<span class="conseille">👉 Conseillé</span>' : '') + '</span><span class="et3">' + etoilesTxt(prog[mid][i]) + '</span></button>';
     }).join('');
     montrer('vNiveaux');
   }
@@ -2295,7 +2297,7 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
     var best = null;
     MONDES.forEach(function (m) {
       m.niveaux.forEach(function (n, i) {
-        if (!ouvert(m.id, i)) return;
+        if (prog[m.id][i] === 0 && i !== conseille(m.id)) return; // pas de niveau neuf hors de l’ordre conseillé
         var e = prog[m.id][i];
         if (!best || e < best.e) best = { niv: m.id + '-' + (i + 1), e: e };
       });
@@ -2606,7 +2608,7 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
   /* ---------- Fin de série ---------- */
   function finSerie() {
     var res = SER.res.slice(0, SER.n), bons = res.filter(function (x) { return x; }).length;
-    var etoiles = 0, debloque = false, suite = null;
+    var etoiles = 0, suite = null;
     var j = journal.jours[jour()] || (journal.jours[jour()] = { series: 0, questions: 0, bonnes: 0 });
     j.series++;
     $('#finScores').innerHTML = '';
@@ -2626,9 +2628,7 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
       etoiles = taux >= 0.999 ? 3 : taux >= 0.9 ? 2 : taux >= 0.8 ? 1 : 0;
       var p = SER.niv.split('-'), mid = p[0], ni = +p[1] - 1;
       if (etoiles > prog[mid][ni]) {
-        var avant = prog[mid][ni];
         prog[mid][ni] = etoiles;
-        if (avant === 0 && ni + 1 < prog[mid].length && !prog.tout) debloque = true;
       }
       suite = { niv: etoiles >= 1 && ni + 1 < prog[mid].length ? mid + '-' + (ni + 2) : SER.niv };
       $('#btnContinuer').textContent = SER.sorte === 'seance' ? 'Encore une séance' : etoiles >= 1 && ni + 1 < prog[mid].length ? 'Niveau suivant' : 'Rejouer';
@@ -2639,7 +2639,7 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
     $('#finTitre').textContent = etoiles >= 1 ? pick(['Bravo !', 'Super !', 'Génial !']) : 'Bien joué, continue !';
     $('#finEtoiles').innerHTML = [0, 1, 2].map(function (i) { return '<span class="' + (i < etoiles ? 'on' : 'off') + '">★</span>'; }).join('');
     $('#finTexte').textContent = bons + ' bonne' + (bons > 1 ? 's' : '') + ' réponse' + (bons > 1 ? 's' : '') + ' du premier coup sur ' + SER.n + '.' +
-      (debloque ? ' Le niveau suivant est ouvert !' : '') + (etoiles === 0 && SER.sorte !== 'test' ? ' Il en faut 8 pour gagner une étoile.' : '');
+(etoiles === 0 && SER.sorte !== 'test' ? ' Il en faut 8 pour gagner une étoile.' : '');
     var fc = $('#finCreature');
     fc.hidden = etoiles < 1;
     if (etoiles >= 1) { dessineCreature(fc.querySelector('svg'), creatureSuivante()); fc.classList.remove('anim-arrive'); void fc.offsetWidth; fc.classList.add('anim-arrive'); son('fin'); confettis(); }
@@ -2668,12 +2668,11 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
     $('#pErreurs').innerHTML = er.length ? er.slice(0, 6).map(function (x) { return '<tr><td>' + esc(ERREURS[x[0]] || x[0]) + '</td><td>' + x[1] + ' fois</td></tr>'; }).join('') : '<tr><td>Aucune erreur cette semaine.</td><td></td></tr>';
     $('#pEtoiles').innerHTML = MONDES.map(function (m) {
       return '<tr><th colspan="2">' + m.ico + ' ' + esc(m.nom) + '</th></tr>' + m.niveaux.map(function (nv, i) {
-        return '<tr><td>' + LETTRES[i] + '. ' + esc(nv.nom) + '</td><td>' + (ouvert(m.id, i) ? etoilesTxt(prog[m.id][i]) : '🔒') + '</td></tr>';
+        return '<tr><td>' + LETTRES[i] + '. ' + esc(nv.nom) + '</td><td>' + etoilesTxt(prog[m.id][i]) + '</td></tr>';
       }).join('');
     }).join('');
     $('#btnZeroOui').hidden = true;
     $('#copieInfo').hidden = true;
-    $('#btnDebloquer').disabled = prog.tout;
     montrer('vParent');
   }
   function resume() {
@@ -2750,7 +2749,6 @@ body.joue .wrap { height: 100dvh; min-height: 0; padding-top: max(10px, env(safe
   // Carnet du parent
   $('#btnParent').addEventListener('click', afficherParent);
   $('#btnFermerParent').addEventListener('click', afficherAccueil);
-  $('#btnDebloquer').addEventListener('click', function () { prog.tout = true; sauver(); afficherParent(); });
   $('#btnZero').addEventListener('click', function () { $('#btnZeroOui').hidden = false; $('#btnZeroOui').focus(); });
   $('#btnZeroOui').addEventListener('click', function () {
     MONDES.forEach(function (m) { prog[m.id] = m.niveaux.map(function () { return 0; }); });
