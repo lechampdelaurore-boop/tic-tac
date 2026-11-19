@@ -89,7 +89,7 @@ Lien discret en bas de l'accueil : étoiles par niveau, jours joués sur les 14 
 
 Sons, animations, voix (lire l'heure à voix haute), vibrations. Les animations respectent aussi le réglage « réduire les animations » du téléphone.
 
-Les progrès restent dans le navigateur de l'appareil : aucun compte, et rien n'est envoyé sur internet.
+Les progrès restent dans le navigateur de l'appareil : aucun compte, et rien sur les progrès n'est envoyé sur internet. Seul un compteur de visites anonyme (GoatCounter) compte les ouvertures de l'appli : pas de cookie, pas de nom.
 
 ## Fichiers
 

@@ -56,5 +56,5 @@ Lien discret « Carnet du parent » en bas de l'accueil (sans mot de passe).
 ## Prénom et données
 
 - L'appli dit « Bonjour » avec le prénom choisi sur la page « Mes applis ». Elle ne le modifie jamais.
-- Tout reste dans le navigateur du téléphone ou de la tablette : aucun compte, rien n'est envoyé sur internet. Effacer les données du navigateur efface aussi les progrès.
+- Tout reste dans le navigateur du téléphone ou de la tablette : aucun compte, rien sur les progrès n'est envoyé sur internet. Un compteur de visites anonyme (GoatCounter) compte seulement les ouvertures de l'appli : pas de cookie, pas de nom. Effacer les données du navigateur efface aussi les progrès.
 - Les progrès ne passent pas d'un appareil à l'autre.
